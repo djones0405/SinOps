@@ -1,0 +1,47 @@
+# Ignore backup subfolders and files
+scripts/*/.bk/
+*.bk
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore OS/system files
+.DS_Store
+Thumbs.db
+
+# Ignore temp or swap files
+*~
+*.swp
+*.swo
+
+# Ignore editor/project files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore Python cache (if any scripts are Python)
+__pycache__/
+*.pyc
+
+# Ignore shell history (if present)
+.sh_history
+
+# Ignore environment files and secrets
+.env
+.env.*
+secrets/
+*.secrets
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.asc
+*.gpg
+*.enc
+.secret
+*.secret
+
+# Ignore GitHub Actions secrets backup files
+.github/secrets/
