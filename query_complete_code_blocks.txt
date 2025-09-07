@@ -1,0 +1,71 @@
+# How to Optimize Your Codeblock Requests to Copilot
+
+## 1. Be Specific About Your Environment
+
+- **State the language, framework, and version.**
+  - _Example:_  
+    “Give me a Python 3.10 Flask app with a Prometheus metrics endpoint.”
+
+## 2. Define the Output Format
+
+- **Request output in a specific file or code block.**
+  - _Example:_  
+    “Generate a `docker-compose.yml` file for Prometheus, Grafana, and Loki.”
+
+## 3. Clarify the Use Case or Goal
+
+- **Explain what you want the code to do.**
+  - _Example:_  
+    “Show a Node.js Express middleware to count HTTP 500 errors for Prometheus.”
+
+## 4. Include Resource or Constraint Details
+
+- **Mention ports, dependencies, or special requirements.**
+  - _Example:_  
+    “Expose Grafana on port 4000 instead of 3000.”
+
+## 5. Indicate Minimal vs. Production-Ready
+
+- **Say if you want a minimal example or a production-ready setup.**
+  - _Example:_  
+    “Give me a minimal working Compose file for OpenWebUI and Prometheus.”
+
+## 6. Ask for Comments or Explanations (Optional)
+
+- **Request inline comments or a post-block explanation.**
+  - _Example:_  
+    “Add comments to explain each service in the Compose file.”
+
+## 7. Reference Previous Context if Needed
+
+- **If building on a previous codeblock, mention what to add or change.**
+  - _Example:_  
+    “Extend the previous Compose file to add cAdvisor.”
+
+## 8. Provide Example Data or Structure (for APIs, etc.)
+
+- **If you need an API or config example, specify the endpoint/fields.**
+  - _Example:_  
+    “Show a Prometheus scrape config for a service at `myapp:8080`.”
+
+---
+
+## Example: Optimized vs. Vague Query
+
+**Vague:**  
+> “Show me a docker compose file.”
+
+**Optimized:**  
+> “Generate a Docker Compose file for Prometheus, Grafana (on port 4000), Loki, and cAdvisor, using a custom user-defined network called `monitoring`.”
+
+---
+
+## Pro Tips
+
+- **Batch requests:** Ask for all related files or configs at once for consistent results.
+- **Iterate:** Clarify or refine your prompt based on the output you receive.
+- **Request edits:** “Now add persistent volumes to the Compose file.”
+
+---
+
+**The more details you provide, the better the codeblock Copilot can generate for you!**
