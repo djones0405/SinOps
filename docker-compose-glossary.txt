@@ -1,0 +1,122 @@
+# Docker Compose Options Glossary
+
+This glossary defines the most common and advanced Docker Compose options, along with practical advice for how to apply or use each.  
+**For full details, consult the [Compose Specification](https://compose-spec.io/) and relevant image documentation.**
+
+---
+
+## Service Options
+
+| Option                | Definition & Usage                                                                                              |
+|-----------------------|---------------------------------------------------------------------------------------------------------------|
+| `image`               | The image to use for the container. (`nginx:latest`, `myapp:1.0`). Use when pulling from a registry or local cache. |
+| `build`               | Build settings for a custom image: context, dockerfile, args, target, cache_from, network, shm_size, labels. Use when building from source. |
+| `container_name`      | Assigns a custom name to the container. Useful for scripting, networking, and legacy linking.                  |
+| `hostname`            | Sets the hostname inside the container. Use to control how the container identifies itself on the network.      |
+| `domainname`          | Sets the domain name inside the container. Used for DNS resolution inside the container.                        |
+| `env_file`            | List of files with environment variables. Use to manage secrets/configs outside your Compose file.              |
+| `environment`         | Environment variables for the container. Set passwords, configs, feature toggles, etc.                         |
+| `command`             | Override the default command defined by the image. Use to customize container startup.                          |
+| `entrypoint`          | Override the default entrypoint. Useful for wrappers or custom bootstrap logic.                                 |
+| `working_dir`         | Set the working directory inside the container. Controls where commands run.                                    |
+| `user`                | Set the user (UID/GID or name) for running the container. Boosts security by dropping root privileges.          |
+| `ports`               | Maps host ports to container ports, e.g. `"8080:80"`. Exposes services externally or to your host system.       |
+| `expose`              | Exposes container ports to linked services (not to host). Use for inter-service communication only.             |
+| `volumes`             | Mount host paths, named volumes, configs, secrets, or tmpfs into the container. Use for persistent data, configs, or temp files. |
+| `configs`             | Mount Docker configs (Swarm only) into the container. Use for managing app configs securely.                    |
+| `secrets`             | Mount Docker secrets (Swarm only). Use for sensitive data like API keys, passwords.                             |
+| `depends_on`          | Expresses service dependencies/start order. Compose v2+: can wait for health.                                   |
+| `links`               | Legacy linking to other containers. Avoid in new setups; use networks instead.                                  |
+| `networks`            | Attach containers to one or more custom networks. Use for isolation, security, and service discovery.           |
+| `restart`             | Restart policy: `no`, `always`, `on-failure`, `unless-stopped`. Use to increase resilience of critical services.|
+| `healthcheck`         | Define how Compose checks container health. Use for orchestrator self-healing and readiness checks.             |
+| `labels`              | Add metadata for Compose, orchestrators, or tools like Traefik. Use for automation, monitoring, or docs.        |
+| `logging`             | Configure log driver and options (`max-size`, `max-file`, etc.). Prevents log bloat and enables log rotation.   |
+| `cap_add`             | Add Linux capabilities (e.g., `NET_ADMIN`). Use for privileged operations when necessary.                       |
+| `cap_drop`            | Drop Linux capabilities. Use for reducing attack surface and increasing security.                               |
+| `security_opt`        | Set security options (e.g., `no-new-privileges:true`, AppArmor, seccomp). Use for compliance and hardening.      |
+| `sysctls`             | Tune kernel parameters (e.g., for networking). Useful for low-level networking or performance tuning.           |
+| `ulimits`             | Set resource limits (processes, open files, etc.). Prevents runaway processes.                                  |
+| `mem_limit`           | Limit container memory usage. Use to prevent a single container from exhausting system memory.                   |
+| `cpus`                | Limit CPU usage for the container (e.g. `cpus: 0.5`). Use to manage resource sharing on the host.               |
+| `cpu_shares`          | Relative CPU weight for the container. Use for resource prioritization.                                         |
+| `dns`                 | Set custom DNS servers for the container. Use for custom or internal resolution.                                |
+| `dns_search`          | Set DNS search domains. Useful in enterprise or multi-domain environments.                                      |
+| `extra_hosts`         | Add entries to the container’s `/etc/hosts`. Use to override DNS or provide local hostnames.                    |
+| `privileged`          | Give the container extended privileges. Use only when necessary for hardware, sysadmin, etc.                    |
+| `read_only`           | Mount the whole container filesystem as read-only. Use for security, especially with stateless apps.            |
+| `shm_size`            | Set `/dev/shm` (shared memory) size. Useful for databases or apps that need more shared memory.                 |
+| `stop_grace_period`   | Time to wait before forcefully killing a container. Use for graceful shutdowns.                                 |
+| `stop_signal`         | Signal sent to stop the container (`SIGTERM` by default). Use if your app requires a different one.             |
+| `mac_address`         | Set a custom MAC address for the container. Useful for legacy network setups.                                   |
+| `ipc`                 | Set the IPC mode (`host`, `none`, `container:<name|id>`, `shareable`). Use for shared memory or advanced comms. |
+| `tmpfs`               | Mount a tmpfs (in-memory) filesystem. Use for fast, ephemeral storage or security.                              |
+| `devices`             | Map host devices into the container. Required for hardware access (e.g., USB, GPU).                             |
+| `device_cgroup_rules` | Add custom cgroup rules for devices. Use for fine-grained hardware access.                                      |
+| `group_add`           | Add extra groups to the user inside the container. Use for resource access.                                     |
+| `isolation`           | Set isolation level (Windows containers only).                                                                  |
+| `oom_kill_disable`    | Disable OOM killer. Use with caution as it may impact system stability.                                         |
+| `oom_score_adj`       | Adjust the OOM killer score. Use to prioritize or deprioritize containers.                                      |
+| `pid`                 | Set PID namespace (`host`, `container:<name|id>`, `none`). Use for process-level integration.                   |
+| `runtime`             | Set the container runtime (`nvidia` for GPU, etc.). Required for hardware acceleration.                         |
+| `stdin_open`          | Keep STDIN open (interactive mode). Use for debugging or REPLs.                                                 |
+| `tty`                 | Allocate a pseudo-TTY. Use for interactive shells or apps expecting a TTY.                                      |
+| `profiles`            | Assign the service to a named profile for conditional service inclusion. Use for dev/test/production separation.|
+| `scale`               | Number of container instances to run (Compose v1 only; use `docker compose up --scale` otherwise).              |
+
+---
+
+## Network Options
+
+| Option                    | Definition & Usage                                                                                                  |
+|---------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `driver`                  | Network driver (`bridge`, `overlay`, `host`, etc.). Use for controlling network isolation and features.             |
+| `ipam`                    | IP Address Management config: subnets, gateways, IP ranges, aux_addresses. Use to assign static IPs/subnets.        |
+| `enable_ipv6`             | Enable IPv6 for the network.                                                                                        |
+| `attachable`              | Allow standalone containers to attach to this network. Use for dynamic service discovery.                           |
+| `internal`                | Restrict network access to only containers on the same network. Use for private backends or sensitive comms.        |
+| `driver_opts`             | Driver-specific options (e.g., tuning bridge behavior). Consult driver docs for details.                            |
+| `labels`                  | Metadata for the network. Use for automation or documentation.                                                      |
+| `external`                | Use an existing network outside the scope of the Compose project.                                                   |
+| `name`                    | Specify a custom network name (overrides Compose project prefix).                                                   |
+
+---
+
+## Volume Options
+
+
+| Option                    | Definition & Usage                                                                                                  |
+|---------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `driver`                  | Volume driver (`local`, `nfs`, etc.). Use for persistent storage and backup strategies.                             |
+| `driver_opts`             | Driver-specific options. Use for tuning storage behavior or mounting remote filesystems.                            |
+| `labels`                  | Metadata for the volume. Use for automation or documentation.                                                       |
+| `external`                | Use an existing volume outside the scope of the Compose project.                                                    |
+| `name`                    | Specify a custom volume name (overrides Compose project prefix).                                                    |
+
+---
+
+## Configs & Secrets (Docker Swarm Only)
+
+| Option    | Definition & Usage                                                        |
+|-----------|---------------------------------------------------------------------------|
+| `file`    | Path to the config/secret file on the orchestrator node.                  |
+| `external`| Mark as externally managed. Use when referencing configs/secrets not defined in Compose. |
+| `name`    | Specify a custom name for the config/secret.                              |
+| `labels`  | Metadata for the config/secret.                                           |
+
+---
+
+## Practical Tips
+
+- **Always refer to the documentation** for each image/service for supported environment variables and recommendations.
+- **Use `env_file` for sensitive values** and to keep your Compose file clean.
+- **Leverage networks and volumes** for security, flexibility, and persistence.
+- **Resource limits (`ulimits`, `mem_limit`, `cpus`, etc.)** help prevent one container from starving others or crashing the host.
+- **Healthchecks** are crucial for orchestrators to restart unhealthy services automatically.
+- **Avoid `privileged`** unless absolutely necessary for your use case.
+- **Use labels and metadata** for automation, monitoring, and documentation.
+- **Profiles** let you customize which services run for dev, test, CI, or prod.
+
+---
+
+_This glossary is a living document. For updates, check the official [Compose Specification](https://compose-spec.io/) and your Docker version’s documentation._

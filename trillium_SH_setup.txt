@@ -1,0 +1,102 @@
+# Trilium Notes: Self-Hosted Setup Guide (Docker & Linux)
+
+This guide will walk you through setting up Trilium Notes as a self-hosted, private note-taking solution on a Linux server using Docker.
+
+---
+
+## Prerequisites
+
+- **Server -Debian 12 Bookworm
+- **Docker** and **Docker Compose** installed  
+  ([Install Docker](https://docs.docker.com/get-docker/) | [Install Docker Compose](https://docs.docker.com/compose/install/))
+
+---
+
+## 1. Create a Directory for Trilium Data
+
+```bash
+mkdir -p ~/trilium-data
+```
+
+This folder will store your notes and configuration files.
+
+---
+
+## 2. Create a Docker Compose File
+
+Create a file named `docker-compose.yml` in your home directory or project folder:
+
+```yaml name=docker-compose.yml
+version: '3.3'
+services:
+  trilium:
+    image: zadam/trilium:latest
+    container_name: trilium
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    volumes:
+      - ~/trilium-data:/home/node/trilium-data
+    environment:
+      - TZ=UTC
+```
+
+- Change `8080:8080` if you want to use a different port.
+- Change `~/trilium-data` if you prefer a different host path.
+
+---
+
+## 3. Start Trilium with Docker Compose
+
+```bash
+docker compose up -d
+```
+
+- The `-d` flag runs Trilium in detached (background) mode.
+
+---
+
+## 4. Access Trilium Notes
+
+- Open your browser and go to:  
+  **http://your-server-ip:8080**
+- On first launch, you'll be prompted to set up your admin account.
+
+---
+
+## 5. (Optional) Update Trilium
+
+To update to the latest version:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+---
+
+## 6. (Optional) Enable HTTPS
+
+For production, secure your Trilium instance:
+
+- **Recommended:** Use a reverse proxy (e.g., Nginx, Caddy, Traefik) with SSL (Let's Encrypt).
+- [Trilium Reverse Proxy Example (docs)](https://github.com/zadam/trilium/wiki/Reverse-proxy-configuration)
+
+---
+
+## 7. (Optional) Set Up Backups
+
+Regularly backup the `~/trilium-data` directory to avoid data loss.
+
+---
+
+## 8. Useful Resources
+
+- [Trilium Notes GitHub](https://github.com/zadam/trilium)
+- [Trilium Wiki](https://github.com/zadam/trilium/wiki)
+- [Docker Hub Image](https://hub.docker.com/r/zadam/trilium)
+
+---
+
+**You’re done!**  
+You now have a private, self-hosted Trilium Notes instance running on your Linux server.
